@@ -1,0 +1,100 @@
+
+<div class="form-group col-md-3">
+<h2>Welcome <%= current_user.name %> from <%= current_user.state.state %></h2>
+	<div>
+	<form action="/logout">
+		<input  class="form-control" type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		<input  class="btn btn-primary" type="submit" value="Logout">
+	</form>
+	<h1>Create an Event</h1>
+		<form action="/events" method="post">
+		<input  class="form-control" type="hidden" name="authenticity_token" value="form_authenticity_token">
+			<label>Event Name:</label>	
+			<input  class="form-control" type="text" name="event[name]">
+			<label>Date:</label>
+			<input  class="form-control" type="date" name="event[date]">
+			<label>City:</label>
+			<input  class="form-control" type="text" name="event[city]">
+			<label>State:</label>
+			<select  class="form-control" name="event[state]">
+				<% @states.each do |state| %>
+				<option value="<%= state.id %>"><%= state.state %></option>
+				<% end %>
+			</select>
+
+			<br>
+			<input  class="btn btn-primary" type="submit" value="Create Event!">
+		</form>
+		<div>
+		<div>
+			<% if flash[:event_errors] %>
+				<% flash[:event_errors].each do |error| %>
+					<p><%= error %></p>
+				<% end %>
+			<% end %>
+		</div>
+			<h3>In State Events</h3>
+			<div>
+				<table class="table table-hover">
+					<thead class="thead-inverse">
+						<th>Host</th>
+						<th>Event</th>
+						<th>Date</th>
+						<th>City</th>
+						<th>Options</th>
+					</thead>
+					<tbody>
+							<% @locals.each do |local| %>
+						<tr>
+								<td><%= local.user.name %></td>
+								<td><a href="/events/<%= local.id %>/show"> <%= local.name %></a></td>
+								<td><%= local.date %></td>
+								<td><%= local.city %></td>
+								<% if current_user.id == local.user.id %> 
+									<td><a href="/delete/<%= local.id %>" value="
+									<%= local.id %>">Delete</a></td>
+								<% end %>
+								<td><a href="/join/<%= local.id %>" value="
+									<%= local.id %>">Attend</a></td>
+						</tr>
+							<% end %>
+					</tbody>
+				</table>
+				<%= flash[:error] %>
+			</div>
+		</div>
+	</div>
+	<div>
+		<h3>Out of State Events</h3>
+		<div>
+				<table class="table table-hover">
+					<thead class="thead-inverse">
+						<th>Host</th>
+						<th>Event</th>
+						<th>Date</th>
+						<th>City</th>
+						<th>Options</th>
+					</thead>
+					<tbody>
+							<% @events.each do |event| %>
+						<tr>
+								<td><%= event.user.name %></td>
+								<td><a href="/events/<%= event.id %>/show"> <%= event.name %></a></td>
+								<td><%= event.date %></td>
+								<td><%= event.city %></td>
+								<% if current_user.id == event.user.id %>
+									<td><a href="/delete/<%= event.id %>" value="
+									<%= event.id %>">Delete</a></td>
+								<% end %>
+								<td><a href="/join/<%= event.id %>" value="
+									<%= event.id %>">Attend</a></td>								
+						</tr>
+							<% end %>
+					</tbody>
+				</table>
+			</div>
+
+	</div>	
+
+</div>
+

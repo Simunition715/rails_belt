@@ -1,0 +1,41 @@
+
+<a href="/dashboard">Events Dashboard </a>
+<h1><%= @event.name %></h1>
+<h3>Host: <%= @event.user.name %></h3>
+<h3>Location: <%= @event.city %>,<%= @event.state.state %></h3>
+<h3>Date: <%= @event.date %></h3>
+<h2>People Attending</h2>
+<div>
+	<h2><%= @visitors.size %></h2>
+</div>
+
+
+<table class="table table-hover">
+	<thead>
+		<th>Name</th>
+		<th>Location</th>
+		<th>State</th>
+	</thead>
+	<tbody>
+<% @visitors.each do |visitor| %>
+		<tr>
+			<td><%= visitor.name %></td>
+			<td><%= visitor.city %></td>
+			<td><%= visitor.state.state %></td>
+		</tr>
+<% end %>	
+	</tbody>
+</table>
+<form action="/comments" method="post">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<div>
+	<input type="hidden" name="event_id" value="<%= @event.id %>">
+		<textarea cols="30" rows="3" name="comment"></textarea>
+	</div>
+	<input type="submit" value="Comment">
+</form>
+<div style="height:120px;width:450px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+	<% @comments.each do |comment| %>
+		<p> <%= comment.user.name %> Said <%= comment.comment %> on <%= comment.created_at.strftime("%b %e, %l:%M %p") %></p>
+	<% end %>
+</div>
